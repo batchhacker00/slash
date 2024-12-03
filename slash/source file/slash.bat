@@ -40,6 +40,8 @@ if "%type%" EQU "pacman putty -y" ( goto putty-install )
 if "%type%" EQU "shutdown now" ( shutdown /s /t 0 )
 if "%type%" EQU "sudo su" ( powershell "start cmd -verb runas" )
 if "%type%" EQU "sniff" ( goto sniffer )
+if "%type%" EQU "git" ( goto git ) 
+if "%type%" EQU "aircrack" ( goto aircrack )
 
 goto cmd
 
@@ -206,6 +208,8 @@ echo [7mwinhack[0m
 echo [7mexploiter[0m
 echo [7msudo su[0m
 echo [7msniff [0m
+echo [7mgit[0m
+echo [7maircrack[0m
 pause > nul
 cls
 goto cmd
@@ -353,5 +357,37 @@ goto loop
 
 :sniffer
 echo ##########0##########
-netstat -nbf | findstr "TCP"
+echo.
+echo local address:
+for /f "tokens=1 skip=6" %%a in ( 'netstat -nbf ^| find "TCP" ') do (
+    echo %%a
+)
+echo foreign address:
+for /f "tokens=2" %%b in ( 'netstat -nbf ^| find "TCP" ') do (
+    echo %%b
+)
+pause > nul
+goto cmd
+
+
+:git
+set /p gitclone="git clone: "
+
+curl -o %gitclone% https://raw.githubusercontent.com/batchhacker00/refs/heads/main/%gitclone%
+
+pause > nul
+goto cmd
+
+
+:aircrack
+echo.
+for /f "tokens=2 delims=:" %%a in ( 'netsh wlan show profiles' ) do (
+
+for /f "tokens=4" %%b in ( 'netsh wlan show profile %%a key^=clear ^| find "Key Content" ' ) do (
+
+echo %%a's password:[32m%%b[0m
+
+)
+)
+pause > nul
 goto cmd
