@@ -42,9 +42,9 @@ if "%type%" EQU "sudo su" ( powershell "start cmd -verb runas" )
 if "%type%" EQU "sniff" ( goto sniffer )
 if "%type%" EQU "git" ( goto git ) 
 if "%type%" EQU "aircrack" ( goto aircrack )
+if "%type%" EQU "spoofing" ( goto spoofing )
 
 goto cmd
-
 
 
 :pwd
@@ -192,24 +192,25 @@ goto cmd
 cls
 echo [7mslashOSS [0m command list
 echo.
-echo [7mls[0m
-echo [7mclear[0m
-echo [7mpwd[0m 
-echo [7mifconfig[0m
-echo [7mpacman[0m
-echo [7mneofetch[0m
-echo [7mcreate wordlist[0m
-echo [7mbruteforce[0m
-echo [7mpasswd[0m
-echo [7mmsfconsole[0m
-echo [7mhydra[0m
-echo [7mnc[0m
-echo [7mwinhack[0m
-echo [7mexploiter[0m
-echo [7msudo su[0m
-echo [7msniff [0m
-echo [7mgit[0m
-echo [7maircrack[0m
+echo [7mls:[0m show all directory
+echo [7mclear:[0m clean the terminal
+echo [7mpwd:[0m watch the current directory
+echo [7mifconfig:[0m show the local ip address 
+echo [7mpacman:[0m download a file 
+echo [7mneofetch:[0m get information of your hardware
+echo [7mcreate wordlist:[0m create a wordlist like Crunch
+echo [7mbruteforce:[0m do a low level bruteforce attack
+echo [7mpasswd:[0m change your system password
+echo [7mmsfconsole:[0m run metasploit framework if is installed
+echo [7mhydra:[0m do a high level bruteforce attack
+echo [7mnc:[0m become a server and stay in listening mode
+echo [7mwinhack:[0m run winhack
+echo [7mexploiter:[0m going in exploit mode
+echo [7msudo su:[0m run slash as root user
+echo [7msniff:[0m sniffing all connections
+echo [7mgit:[0m download a github file 
+echo [7maircrack:[0m scan all wifi password saved in this computer
+echo [7mspoofing:[0m fake default terminal
 pause > nul
 cls
 goto cmd
@@ -276,7 +277,16 @@ if "%command%" EQU "bye" ( goto cmd )
 if "%command%" EQU "ls" ( dir )
 if "%command%" EQU "clear" ( cls )
 if "%command%" EQU "exploit" ( goto exploit )
+if "%command%" EQU "h" ( goto help )
 
+goto exploiter
+
+
+:help
+echo bye
+echo ls
+echo clear
+echo exploit
 goto exploiter
 
 
@@ -385,9 +395,21 @@ for /f "tokens=2 delims=:" %%a in ( 'netsh wlan show profiles' ) do (
 
 for /f "tokens=4" %%b in ( 'netsh wlan show profile %%a key^=clear ^| find "Key Content" ' ) do (
 
-echo %%a's password:[32m%%b[0m
+echo %%a's password:[7m%%b[0m
 
 )
 )
 pause > nul
 goto cmd
+
+
+:spoofing
+title cmd.exe
+
+set /p cmdline="%cd%>"
+
+%cmdline%
+
+if "%cmdline%" EQU "slash" ( goto cmd )
+
+goto spoofing
