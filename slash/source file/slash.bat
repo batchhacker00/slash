@@ -361,4 +361,147 @@ if /I "%errorlevel%" NEQ "0" (
 
 if /I "%errorlevel%" NEQ "0" (
   chcp 65001 >nul
-  echo %hostname% has WinRM E
+  echo %hostname% has WinRM Enabled!
+  timeout /t 3 >nul
+  goto option
+)
+
+:option
+cls
+echo connected to %hostname%
+echo. 
+echo 1 go to file system
+echo 2 go to main display
+echo 3 create a payload
+echo 4 shutdown the machine
+echo.
+choice /c:1234 /n /m "0══|#====>"
+
+if %errorlevel% == 1 ( goto filez )
+if %errorlevel% == 2 ( goto back )
+if %errorlevel% == 3 ( goto payload )
+if %errorlevel% == 4 ( goto shut )
+
+:filez
+start "" "\\%hostname%\C$"
+cls
+goto option
+
+:payload
+start "" "\\%hostname%\C$\users\"
+goto nano
+
+:nano
+set /p filename="file name & extension: "
+goto loop
+
+
+
+:sniffer
+echo LA:                 FA:                STATE:
+
+for /f "tokens=4" %%c in ( 'netstat -nbf' ) do ( set c=%%c )
+
+for /f "tokens=2 skip=4" %%a in ( 'netstat -nbf' ) do (
+
+for /f "tokens=3 skip=4" %%b in ( 'netstat -nbf' ) do (
+
+echo [%%a]   [%%b]  [36m%c%[0m
+    
+)
+)
+
+pause > nul
+goto cmd
+
+
+:git
+set /p gitclone="git clone: "
+
+curl -o %gitclone% https://raw.githubusercontent.com/batchhacker00/refs/heads/main/%gitclone%
+
+pause > nul
+goto cmd
+
+
+:aircrack
+cls
+for /f "tokens=2 delims=:" %%a in ( 'netsh wlan show profiles' ) do (
+
+for /f "tokens=4" %%b in ( 'netsh wlan show profile %%a key^=clear ^| find "Key Content" ' ) do (
+
+echo %%a's password:[7m%%b[0m
+
+)
+)
+pause > nul
+goto cmd
+
+
+:spoofing
+title cmd
+
+echo type 'slash' to return to slashoss console
+
+set /p cmdline="%cd%>"
+
+%cmdline%
+
+if "%cmdline%" EQU "ls" ( dir )
+if "%cmdline%" EQU "ls -d" ( dir | find "<DIR>" )
+if "%cmdline%" EQU "ls -exe" ( dir | find ".exe" ) 
+if "%cmdline%" EQU "ifconfig" ( ipconfig | find "IPv4" )
+if "%cmdline%" EQU "clear" ( cls )
+rem if "%cmdline%" EQU ""
+
+if "%cmdline%" EQU "slash" ( title slashOSS && goto cmd )
+
+goto spoofing
+
+
+:nanoedit
+echo 00    0   000000000   00    0    000
+echo 0 0   0   00     00   0 0   0   0   0
+echo 0  0  0   000000000   0  0  0   0   0
+echo 0   0 0   00     00   0   0 0   0   0
+echo 0    00   00     00   0    00    000
+echo.
+set /p filename="filename:"
+echo.
+color a
+echo type @ to closing editor
+echo --------------------------------------
+echo.
+
+:looper 
+
+set /p w="~ "
+echo %w% >> %filename%
+
+if "%w%" EQU "@" ( goto foptions ) 
+
+goto looper
+
+goto nanoedit
+
+:foptions
+echo --------------------------------------
+echo filename:%filename%%
+echo.
+echo u want delete this file(1 = no, 2 = yes, 3=show file content, 4=rename file)?
+choice /c:1234 /n /m "~"
+
+if %errorlevel% == 1 ( goto cmd )
+if %errorlevel% == 2 ( del %filename% )
+if %errorlevel% == 3 ( type %filename% && pause > nul && goto foptions )
+if %errorlevel% == 4 ( goto renamer )
+
+:renamer
+set /p newname="new filename:"
+
+ren %filename% %newname%
+echo.
+echo now is ~ %newname% ~
+
+
+goto foptions
