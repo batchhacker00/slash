@@ -5,7 +5,9 @@ title slashOSS
 mode con cols=80 lines=30
 
 :cmd
-set /p "type= [7m{살해자}:[0m"
+
+color 0f
+set /p "type= [7m{살해자}:~@ [0m"
 
 %type%
 
@@ -15,7 +17,7 @@ if "%type%" EQU "ls -exe" ( dir | find ".exe" )
 if "%type%" EQU "ls -d -exe" ( goto secondoption )
 if "%type%" EQU "pwd" ( goto pwd )
 if "%type%" EQU "clear" ( cls )
-if "%type%" EQU "ifconfig" ( ipconfig | find "IPv4" )
+if "%type%" EQU "ifconfig" ( goto ifconfig )
 if "%type%" EQU "bruteforce" ( goto bruteforce )
 if "%type%" EQU "passwd" ( goto passwd )
 if "%type%" EQU "neofetch" ( goto neofetching )
@@ -43,9 +45,26 @@ if "%type%" EQU "sniff" ( goto sniffer )
 if "%type%" EQU "git" ( goto git ) 
 if "%type%" EQU "aircrack" ( goto aircrack )
 if "%type%" EQU "spoofing" ( goto spoofing )
+if "%type%" EQU "reboot" ( shutdown /r /t 0 )
+if "%type%" EQU "nano" ( goto nanoedit )
 
 goto cmd
 
+
+:ifconfig
+ for /f "tokens=2 delims=:" %%a in ( 'ipconfig ^| find "IPv4" ' ) do ( set n=%%a )
+ for /f "tokens=6 " %%b in ( 'ipconfig ^| find "DNS Suffix" ' ) do ( set n2=%%b )
+ for /f "tokens=2 delims=:" %%c in ( 'ipconfig ^| find "Mask" ' ) do ( set n3=%%c )
+ for /f "tokens=2 delims=:" %%d in ( 'ipconfig ^| find "Gateway" ' ) do ( set n4=%%d )
+
+ echo IPv4:[7m%n%[0m
+ echo DNS:[7m%n2%[0m
+ echo Mask:[7m%n3%[0m
+ echo Router:[7m%n4%[0m
+
+ pause > nul
+
+goto cmd
 
 :pwd
 echo current path:
@@ -62,8 +81,9 @@ echo       ^|^
 
 
 systeminfo | find "Host Name"
-systeminfo | find "[01]"
-systeminfo | find "[02]"
+for /f "tokens=2 delims=:" %%a in ( 'systeminfo ^| find "[01]" ' ) do (
+  echo                         %%a
+) 
 
 pause > nul
 goto cmd
@@ -91,17 +111,18 @@ goto cmd
 :error
 cls 
 echo u have missed a argument
-echo example:  pacman <name> -y 
+echo pacman <name> -y 
+pause > nul
 goto cmd
 
 
 :nmap-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl https://nmap.org/dist/nmap-7.95-setup.exe -o nmap-7.95-setup.exe.exe 
 nmap-7.95-setup.exe 
@@ -114,16 +135,17 @@ for /L %%a in (1000,1,9999) do (
 echo creation wordlist...
 echo %%a >> word.txt
 )
+echo DONE!
 goto cmd
 
 
 :metasploit-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl https://downloads.metasploit.com/data/releases/metasploit-latest-windows-x64-installer.exe -o msfconsole-installer.exe
 msfconsole-installer.exe
@@ -132,11 +154,11 @@ goto cmd
 
 :notpadpp-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.7.1/npp.8.7.1.Installer.x64.exe -o notpadpp.exe
 notpadpp.exe
@@ -145,11 +167,11 @@ goto cmd
 
 :hydra-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl -L -o hydra.zip https://github.com/maaaaz/thc-hydra-windows/archive/master.zip
 tar -xf hydra.zip
@@ -158,11 +180,11 @@ goto cmd
 
 :python3-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe -o python-3.13.0-amd64.exe
 python-3.13.0-amd64.exe
@@ -170,11 +192,11 @@ goto cmd
 
 :putty-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl https://the.earth.li/~sgtatham/putty/latest/wa64/putty.exe 
 putty.exe
@@ -205,12 +227,13 @@ echo [7mmsfconsole:[0m run metasploit framework if is installed
 echo [7mhydra:[0m do a high level bruteforce attack
 echo [7mnc:[0m become a server and stay in listening mode
 echo [7mwinhack:[0m run winhack
-echo [7mexploiter:[0m going in exploit mode
+echo [7mexploiter:[0m goes in exploit mode
 echo [7msudo su:[0m run slash as root user
 echo [7msniff:[0m sniffing all connections
 echo [7mgit:[0m download a github file 
 echo [7maircrack:[0m scan all wifi password saved in this computer
 echo [7mspoofing:[0m fake default terminal
+echo [7mnano:[0m text editor
 pause > nul
 cls
 goto cmd
@@ -233,11 +256,11 @@ goto cmd
 
 :winhack-install
 cls
-echo      ########
-echo     ##########
-echo     ###
-echo     ##########
-echo      #######
+echo      [33m########[0m
+echo     [33m##########[0m
+echo     [33m###[0m
+echo     [33m##########[0m
+echo      [33m#######[0m
 echo     download...
 curl -L https://github.com/SL4Y3RO4/winhack/blob/main/winhack.bat -o winhack.bat
 goto cmd
@@ -269,6 +292,15 @@ goto cmd
 
 
 :exploiter
+echo [7m   __________________
+echo [7m  /                  \
+echo   [7m^|   ####   #   #   ^|
+echo   [7m^|   #       # #    ^|
+echo   [7m^|   ####     #     ^|
+echo   [7m^|   #       # #    ^|
+echo   [7m^|   ####   #   #   ^|
+echo [7m  \__________________/
+
 set /p "command= [7m{살해자/exploiter}0══|#====>[0m"
 
 %command%
@@ -283,10 +315,10 @@ goto exploiter
 
 
 :help
-echo bye
-echo ls
-echo clear
-echo exploit
+echo bye:exit from exploiter mode
+echo ls:show the directories
+echo clear:clear the terminal
+echo exploit:run the exploiter phase
 goto exploiter
 
 
@@ -329,87 +361,4 @@ if /I "%errorlevel%" NEQ "0" (
 
 if /I "%errorlevel%" NEQ "0" (
   chcp 65001 >nul
-  echo %hostname% has WinRM Enabled!
-  timeout /t 3 >nul
-  goto option
-)
-
-:option
-cls
-echo connected to %hostname%
-echo. 
-echo 1 go to file system
-echo 2 go to main display
-echo 3 create a payload
-echo 4 shutdown the machine
-echo.
-choice /c:1234 /n /m "0══|#====>"
-
-if %errorlevel% == 1 ( goto filez )
-if %errorlevel% == 2 ( goto back )
-if %errorlevel% == 3 ( goto payload )
-if %errorlevel% == 4 ( goto shut )
-
-:filez
-start "" "\\%hostname%\C$"
-cls
-goto option
-
-:payload
-start "" "\\%hostname%\C$\users\"
-goto nano
-
-:nano
-set /p filename="file name & extension: "
-goto loop
-
-
-
-:sniffer
-echo ##########0##########
-echo.
-echo local address:
-for /f "tokens=1 skip=6" %%a in ( 'netstat -nbf ^| find "TCP" ') do (
-    echo %%a
-)
-echo foreign address:
-for /f "tokens=2" %%b in ( 'netstat -nbf ^| find "TCP" ') do (
-    echo %%b
-)
-pause > nul
-goto cmd
-
-
-:git
-set /p gitclone="git clone: "
-
-curl -o %gitclone% https://raw.githubusercontent.com/batchhacker00/refs/heads/main/%gitclone%
-
-pause > nul
-goto cmd
-
-
-:aircrack
-echo.
-for /f "tokens=2 delims=:" %%a in ( 'netsh wlan show profiles' ) do (
-
-for /f "tokens=4" %%b in ( 'netsh wlan show profile %%a key^=clear ^| find "Key Content" ' ) do (
-
-echo %%a's password:[7m%%b[0m
-
-)
-)
-pause > nul
-goto cmd
-
-
-:spoofing
-title cmd.exe
-
-set /p cmdline="%cd%>"
-
-%cmdline%
-
-if "%cmdline%" EQU "slash" ( goto cmd )
-
-goto spoofing
+  echo %hostname% has WinRM E
